@@ -150,6 +150,8 @@ if(isset($_POST['login'])){
 
             <div class="form-group">
 
+            <label>Email</label>
+
                 <input type="email"
                        name="email"
                        placeholder="E-mail"
