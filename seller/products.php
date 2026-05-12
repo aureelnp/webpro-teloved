@@ -1,55 +1,120 @@
 <?php
-
 include '../auth/middleware.php';
-include '../config/connect.php';
-
-$seller_id = $_SESSION['user_id'];
-
-$query = mysqli_query($conn,
-    "SELECT * FROM products
-     WHERE seller_id='$seller_id'"
-);
-
+if($_SESSION['role'] != 'seller'){ die("Access Denied"); }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products | Teloved</title>
+    <link rel="stylesheet" href="../assets/css/seller-dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
 
-<h1>My Products</h1>
+<nav class="navbar">
+    <div class="container nav-wrapper">
+        <div class="logo">TELOVED</div>
+        <div class="nav-links">
+            <a href="dashboard.php">Dashboard</a>
+            <a href="products.php" class="active">Manage Products</a>
+            <a href="../auth/logout.php" class="logout-btn">Logout</a>
+        </div>
+    </div>
+</nav>
 
-<a href="add-product.php">
-    Add Product
-</a>
+<main class="container product-manage-section">
+    <div class="header-flex">
+        <div class="title-area">
+            <h1>My Listings</h1>
+            <p>Manage your product inventory.</p>
+        </div>
+        <a href="add-product.php" class="add-product-btn"><i class="fas fa-plus"></i> Add Product</a>
+    </div>
 
-<br><br>
+    <div class="product-grid" id="productContainer">
+        <p>Loading products...</p>
+    </div>
+</main>
 
-<table border="1" cellpadding="10">
+<script>
+async function loadProducts() {
+    try {
+        const response = await fetch('/webpro/api/products/product_action.php');
+        const products = await response.json();
+        const container = document.getElementById('productContainer');
+        container.innerHTML = '';
 
-<tr>
-    <th>Name</th>
-    <th>Price</th>
-    <th>Action</th>
-</tr>
+        if (products.length === 0) {
+            container.innerHTML = '<p>Anda belum memiliki produk.</p>';
+            return;
+        }
 
-<?php while($product = mysqli_fetch_assoc($query)) : ?>
+        products.forEach(p => {
+        const imagePath = p.image 
+            ? `../assets/images/products/${p.image}` 
+            : null;
 
-<tr>
+        container.innerHTML += `
+            <div class="product-card">
+                <div class="product-image-placeholder">
+                    ${imagePath 
+                        ? `<img src="${imagePath}" style="width:100%; height:100%; object-fit:cover;">` 
+                        : `<i class="far fa-image"></i>`
+                    }
+                    <span class="status-badge">ACTIVE</span>
+                </div>
+                <div class="product-details">
+                    <div class="info-top">
+                        <h3 class="product-name">${p.product_name}</h3>
+                        <p class="product-price">Rp ${new Intl.NumberFormat('id-ID').format(p.price)}</p>
+                    </div>
+                    <div class="product-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i> <span>${p.category}</span>
+                        </div>
+                        <div class="meta-item condition">
+                            <i class="fas fa-info-circle"></i> <span>Condition: ${p.product_condition}</span>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <a href="editProduct.php?id=${p.id}" class="edit-btn">Edit Details</a>
+                        <button onclick="deleteProduct(${p.id})" class="delete-btn">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    } catch (err) {
+        console.error("Gagal memuat produk:", err);
+        document.getElementById('productContainer').innerHTML = '<p>Error memuat data.</p>';
+    }
+}
 
-    <td>
-        <?php echo $product['product_name']; ?>
-    </td>
+async function deleteProduct(id) {
+    if (confirm('Apakah Anda yakin ingin menghapus produk ini?')) {
+        try {
+            const response = await fetch(`../api/products/deleteProducts.php?id=${id}`);
+            const result = await response.text();
 
-    <td>
-        Rp <?php echo $product['price']; ?>
-    </td>
+            if (result.trim().toLowerCase().includes("success")) {
+                alert("Produk berhasil dihapus!");
+                loadProducts(); 
+            } else {
+                alert("Gagal menghapus produk. Pesan: " + result);
+            }
+        } catch (err) {
+            console.error("Error saat menghapus:", err);
+            alert("Terjadi kesalahan koneksi ke server.");
+        }
+    }
+}
 
-    <td>
-
-        <a href="../api/products/deleteProducts.php?id=<?php echo $product['id']; ?>">
-            Delete
-        </a>
-
-    </td>
-
-</tr>
-
-<?php endwhile; ?>
-
-</table>
+document.addEventListener('DOMContentLoaded', loadProducts);
+</script>
+</body>
+</html>
