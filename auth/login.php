@@ -1,7 +1,5 @@
 <?php
-
 session_start();
-
 include '../config/connect.php';
 
 $error = "";
@@ -18,51 +16,34 @@ if(isset($_POST['login'])){
 
     $user = mysqli_fetch_assoc($query);
 
-    // cek apakah user ditemukan
     if($user){
 
-        // cek password
         if(password_verify($password, $user['password'])){
 
-            // cek role sesuai atau tidak
             if($selectedRole != $user['role']){
-
                 $error = "Role tidak sesuai!";
 
             } else {
-
-                // simpan session
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['name'] = $user['name'];
-
-                // redirect berdasarkan role
                 if($user['role'] == 'seller'){
-
                     header("Location: ../seller/dashboard.php");
                     exit;
-
                 } else {
-
                     header("Location: ../buyer/homepage.php");
                     exit;
-
                 }
 
             }
 
         } else {
-
-            $error = "Akun tidak ditemukan!";
-
+            $error = "Akun tidak ditemukan, silahkan Registrasi terlebih dahulu!";
         }
 
     } else {
-
-        $error = "Akun tidak ditemukan!";
-
+        $error = "Akun tidak ditemukan, silahkan Registrasi terlebih dahulu!";
     }
-
 }
 
 ?>
@@ -200,7 +181,6 @@ if(isset($_POST['login'])){
 
 </main>
 
-<!-- JAVASCRIPT ROLE SWITCH -->
 <script>
 
 const roleButtons = document.querySelectorAll(".role-btn");
@@ -210,15 +190,12 @@ roleButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        // hapus active semua button
         roleButtons.forEach(btn => {
             btn.classList.remove("active");
         });
 
-        // tambahkan active ke button dipilih
         button.classList.add("active");
 
-        // ubah hidden input role
         selectedRole.value = button.dataset.role;
 
     });
@@ -226,7 +203,5 @@ roleButtons.forEach(button => {
 });
 
 </script>
-
 </body>
-
 </html>

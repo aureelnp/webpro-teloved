@@ -1,5 +1,4 @@
 <?php
-
 include '../config/connect.php';
 
 $message = "";
@@ -9,11 +8,8 @@ if(isset($_POST['register'])){
     $name = htmlspecialchars($_POST['name']);
     $email = htmlspecialchars($_POST['email']);
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    // role otomatis dari hidden input
     $role = $_POST['role'];
 
-    // cek email sudah ada atau belum
     $check = mysqli_query($conn,
         "SELECT * FROM users WHERE email='$email'"
     );
@@ -30,21 +26,14 @@ if(isset($_POST['register'])){
         );
 
         if($query){
-
             $message = "Register Success as " . ucfirst($role);
-
         } else {
-
             $message = "Register Failed";
-
         }
-
     }
-
 }
 
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,18 +99,14 @@ if(isset($_POST['register'])){
             </div>
 
         <?php endif; ?>
-
-        <!-- FORM -->
         <form method="POST"
               class="register-form">
 
-            <!-- hidden role -->
             <input type="hidden"
                    name="role"
                    id="selectedRole"
                    value="buyer">
 
-            <!-- NAME -->
             <div class="form-group">
 
                 <label>Name</label>
@@ -133,7 +118,6 @@ if(isset($_POST['register'])){
 
             </div>
 
-            <!-- EMAIL -->
             <div class="form-group">
 
                 <label>Email</label>
@@ -145,7 +129,6 @@ if(isset($_POST['register'])){
 
             </div>
 
-            <!-- PASSWORD -->
             <div class="form-group">
 
                 <label>Password</label>
@@ -156,8 +139,6 @@ if(isset($_POST['register'])){
                        required>
 
             </div>
-
-            <!-- TERMS -->
             <div class="terms">
 
                 <input type="checkbox"
@@ -195,8 +176,6 @@ if(isset($_POST['register'])){
     </div>
 
 </div>
-
-<!-- JAVASCRIPT -->
 <script>
 
 const roleButtons = document.querySelectorAll(".role-btn");
@@ -206,15 +185,12 @@ roleButtons.forEach(button => {
 
     button.addEventListener("click", () => {
 
-        // remove active
         roleButtons.forEach(btn => {
             btn.classList.remove("active");
         });
 
-        // add active
         button.classList.add("active");
 
-        // ubah role hidden input
         selectedRole.value = button.dataset.role;
 
     });
