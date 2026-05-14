@@ -27,13 +27,15 @@ if(isset($_POST['login'])){
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['name'] = $user['name'];
-                if($user['role'] == 'seller'){
-                    header("Location: ../seller/dashboard.php");
-                    exit;
-                } else {
-                    header("Location: ../buyer/homepage.php");
-                    exit;
-                }
+            if($user['role'] == 'admin'){
+                header("Location: ../admin/users.php");
+            }
+            elseif($user['role'] == 'seller'){
+                header("Location: ../seller/dashboard.php");
+            }
+            else{
+                header("Location: ../buyer/homepage.php");
+            }
 
             }
 
@@ -103,8 +105,14 @@ if(isset($_POST['login'])){
             <button type="button"
                     class="role-btn"
                     data-role="seller">
-
                 Seller
+            </button>
+            
+            <button type="button"
+                    class="role-btn"
+                    data-role="admin">
+                Admin
+            </button>
 
             </button>
 

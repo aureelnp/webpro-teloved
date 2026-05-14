@@ -53,6 +53,7 @@ if ($_SESSION['role'] != 'seller') { die("Access Denied"); }
                         <label>CATEGORY</label>
                         <select name="category" required>
                             <option value="">Select Category</option>
+                            <option value="Elektronik">Elektronik</option>
                             <option value="Tas">Tas</option>
                             <option value="Sepatu">Sepatu</option>
                             <option value="Atasan">Atasan</option>
@@ -117,7 +118,7 @@ document.getElementById('formAddProduct').addEventListener('submit', async funct
     const formData = new FormData(this);
     
     try {
-        const response = await fetch('/webpro/api/products/product_action.php', {
+        const response = await fetch('/webpro-teloved/api/products/product_action.php', {
             method: 'POST',
             body: formData 
         });
