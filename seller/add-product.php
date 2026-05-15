@@ -53,6 +53,7 @@ if ($_SESSION['role'] != 'seller') { die("Access Denied"); }
                         <label>CATEGORY</label>
                         <select name="category" required>
                             <option value="">Select Category</option>
+                            <option value="Elektronik">Elektronik</option>
                             <option value="Tas">Tas</option>
                             <option value="Sepatu">Sepatu</option>
                             <option value="Atasan">Atasan</option>

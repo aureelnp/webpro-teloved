@@ -27,13 +27,15 @@ if(isset($_POST['login'])){
                 $_SESSION['user_id'] = $user['id'];
                 $_SESSION['role'] = $user['role'];
                 $_SESSION['name'] = $user['name'];
-                if($user['role'] == 'seller'){
-                    header("Location: ../seller/dashboard.php");
-                    exit;
-                } else {
-                    header("Location: ../buyer/homepage.php");
-                    exit;
-                }
+            if($user['role'] == 'admin'){
+                header("Location: ../admin/users.php");
+            }
+            elseif($user['role'] == 'seller'){
+                header("Location: ../seller/dashboard.php");
+            }
+            else{
+                header("Location: ../buyer/homepage.php");
+            }
 
             }
 
@@ -103,8 +105,14 @@ if(isset($_POST['login'])){
             <button type="button"
                     class="role-btn"
                     data-role="seller">
-
                 Seller
+            </button>
+            
+            <button type="button"
+                    class="role-btn"
+                    data-role="admin">
+                Admin
+            </button>
 
             </button>
 
@@ -165,10 +173,10 @@ if(isset($_POST['login'])){
             </button>
 
         </form>
-
+        
         <footer class="login-footer">
 
-            <p>
+            <p id="registerFooter">
                 Don’t have an account?
                 <a href="register.php">
                     Create here
@@ -185,6 +193,7 @@ if(isset($_POST['login'])){
 
 const roleButtons = document.querySelectorAll(".role-btn");
 const selectedRole = document.getElementById("selectedRole");
+const registerFooter = document.getElementById("registerFooter");
 
 roleButtons.forEach(button => {
 
@@ -196,7 +205,16 @@ roleButtons.forEach(button => {
 
         button.classList.add("active");
 
-        selectedRole.value = button.dataset.role;
+        let role = button.dataset.role;
+
+        selectedRole.value = role;
+
+        // sembunyikan register kalau admin
+        if(role === "admin"){
+            registerFooter.style.display = "none";
+        }else{
+            registerFooter.style.display = "block";
+        }
 
     });
 
