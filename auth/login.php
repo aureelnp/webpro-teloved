@@ -173,10 +173,10 @@ if(isset($_POST['login'])){
             </button>
 
         </form>
-
+        
         <footer class="login-footer">
 
-            <p>
+            <p id="registerFooter">
                 Don’t have an account?
                 <a href="register.php">
                     Create here
@@ -193,6 +193,7 @@ if(isset($_POST['login'])){
 
 const roleButtons = document.querySelectorAll(".role-btn");
 const selectedRole = document.getElementById("selectedRole");
+const registerFooter = document.getElementById("registerFooter");
 
 roleButtons.forEach(button => {
 
@@ -204,7 +205,16 @@ roleButtons.forEach(button => {
 
         button.classList.add("active");
 
-        selectedRole.value = button.dataset.role;
+        let role = button.dataset.role;
+
+        selectedRole.value = role;
+
+        // sembunyikan register kalau admin
+        if(role === "admin"){
+            registerFooter.style.display = "none";
+        }else{
+            registerFooter.style.display = "block";
+        }
 
     });
 
