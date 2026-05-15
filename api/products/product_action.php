@@ -42,9 +42,16 @@ switch($method) {
             }
 
             if (!move_uploaded_file($file_tmp, $upload_dir . $image_name)) {
-                echo json_encode(["status" => "error", "message" => "Failed to move uploaded file."]);
-                exit;
+               echo json_encode([
+                    "status"=>"error",
+                    "tmp"=>$file_tmp,
+                    "target"=>$upload_dir.$image_name,
+                    "upload_error"=>$_FILES['product_image']['error'],
+                    "message"=>"Move failed"
+                ]);
             }
+
+            
         }
 
         $sql = "INSERT INTO products (seller_id, product_name, category, price, product_condition, description, image) 
