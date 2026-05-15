@@ -42,7 +42,7 @@ if($_SESSION['role'] != 'seller'){ die("Access Denied"); }
 <script>
 async function loadProducts() {
     try {
-        const response = await fetch('../api/products/product_action.php');
+        const response = await fetch('/webpro/api/products/product_action.php');
         const products = await response.json();
         const container = document.getElementById('productContainer');
         container.innerHTML = '';

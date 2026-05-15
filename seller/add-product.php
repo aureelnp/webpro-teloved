@@ -118,7 +118,7 @@ document.getElementById('formAddProduct').addEventListener('submit', async funct
     const formData = new FormData(this);
     
     try {
-        const response = await fetch('/webpro-teloved/api/products/product_action.php', {
+        const response = await fetch('/webpro/api/products/product_action.php', {
             method: 'POST',
             body: formData 
         });
